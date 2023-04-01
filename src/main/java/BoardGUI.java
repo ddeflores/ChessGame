@@ -23,6 +23,7 @@ public class BoardGUI extends JFrame {
     private Icon icon;
     private int count;
     private int fromX, fromY, toX, toY;
+    private Color currentTurn = Color.white;
 
     public BoardGUI() {
         blackPawn = new ImageIcon("blackPawn.png");
@@ -70,11 +71,21 @@ public class BoardGUI extends JFrame {
                         else {
                             JButton source = (JButton) e.getSource();
                             Piece pieceToMove = getPiece(selectedButton);
-                            toX = getX(source);
-                            toY = getY(source);
-                            if (pieceToMove.validMove(fromX, fromY, toX, toY)) {
-                                source.setIcon(icon);
-                                selectedButton.setIcon(null);
+                            if (pieceToMove.getColor() == currentTurn) {
+                                toX = getX(source);
+                                toY = getY(source);
+                                if (pieceToMove instanceof PiecePawn) {
+                                    if (((PiecePawn) pieceToMove).validMove(fromX, fromY, toX, toY, ((PiecePawn) pieceToMove).getColor())) {
+                                        source.setIcon(icon);
+                                        selectedButton.setIcon(null);
+                                    }
+                                } else {
+                                    if (pieceToMove.validMove(fromX, fromY, toX, toY)) {
+                                        source.setIcon(icon);
+                                        selectedButton.setIcon(null);
+                                    }
+                                }
+                                currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
                             }
                         }
                         count++;
