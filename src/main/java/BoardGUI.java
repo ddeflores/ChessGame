@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.dnd.MouseDragGestureRecognizer;
 import java.awt.event.*;
 
 public class BoardGUI extends JFrame {
@@ -18,12 +19,16 @@ public class BoardGUI extends JFrame {
     private ImageIcon whiteBishop;
     private ImageIcon whiteQueen;
     private ImageIcon whiteKing;
+    private JButton selectedButton;
+    private Icon icon;
+    private int count;
+    private int fromX, fromY, toX, toY;
 
     public BoardGUI() {
         blackPawn = new ImageIcon("blackPawn.png");
         blackRook = new ImageIcon("blackRook.png");
         blackKnight = new ImageIcon("blackKnight.png");
-        blackBishop = new ImageIcon("blackKnight.png");
+        blackBishop = new ImageIcon("blackBishop.png");
         blackQueen = new ImageIcon("blackQueen.png");
         blackKing = new ImageIcon("blackKing.png");
         whitePawn = new ImageIcon("whitePawn.png");
@@ -53,9 +58,49 @@ public class BoardGUI extends JFrame {
                 else {
                     button.setBackground(new Color(111, 143, 175));
                 }
+                button.addMouseListener(new MouseListener() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (count % 2 == 0) {
+                            selectedButton = (JButton) e.getSource();
+                            fromX = getX(selectedButton);
+                            fromY = getY(selectedButton);
+                            icon = selectedButton.getIcon();
+                        }
+                        else {
+                            JButton source = (JButton) e.getSource();
+                            Piece pieceToMove = getPiece(selectedButton);
+                            toX = getX(source);
+                            toY = getY(source);
+                            if (pieceToMove.validMove(fromX, fromY, toX, toY)) {
+                                source.setIcon(icon);
+                                selectedButton.setIcon(null);
+                            }
+                        }
+                        count++;
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                    }
+                });
                 panel.add(button);
             }
         }
+
+
 
         //Add all pawns
         for (int i = 0; i < 8; i++) {
@@ -82,6 +127,71 @@ public class BoardGUI extends JFrame {
         buttons[7][7].setIcon(whiteRook);
         frame.add(panel, BorderLayout.CENTER);
         frame.setVisible(true);
+    }
+    public int getX(JButton selectedButton) {
+        int x = -1;
+        Container parent = selectedButton.getParent();
+        if (parent.getLayout() instanceof GridLayout) {
+            GridLayout layout = (GridLayout)  parent.getLayout();
+            int cols = layout.getColumns();
+            int rows = layout.getRows();
+            int index = parent.getComponentZOrder(selectedButton);
+            x = index / cols;
+        }
+        return x;
+    }
+    public int getY(JButton selectedButton) {
+        int y = -1;
+        Container parent = selectedButton.getParent();
+        if (parent.getLayout() instanceof GridLayout) {
+            GridLayout layout = (GridLayout)  parent.getLayout();
+            int cols = layout.getColumns();
+            int rows = layout.getRows();
+            int index = parent.getComponentZOrder(selectedButton);
+            y = index % cols;
+        }
+        return y;
+    }
+    public Piece getPiece(JButton selectedButton) {
+        if (selectedButton.getIcon() == blackPawn) {
+            return new PiecePawn(getX(selectedButton), getY(selectedButton), Color.black);
+        }
+        else if (selectedButton.getIcon() == blackRook) {
+            return new PieceRook(getX(selectedButton), getY(selectedButton), Color.black);
+        }
+        else if (selectedButton.getIcon() == blackKnight) {
+            return new PieceKnight(getX(selectedButton), getY(selectedButton), Color.black);
+        }
+        else if (selectedButton.getIcon() == blackBishop) {
+            return new PieceBishop(getX(selectedButton), getY(selectedButton), Color.black);
+        }
+        else if (selectedButton.getIcon() == blackQueen) {
+            return new PieceQueen(getX(selectedButton), getY(selectedButton), Color.black);
+        }
+        else if (selectedButton.getIcon() == blackKing) {
+            return new PieceKing(getX(selectedButton), getY(selectedButton), Color.black);
+        }
+        else if (selectedButton.getIcon() == whitePawn) {
+            return new PiecePawn(getX(selectedButton), getY(selectedButton), Color.white);
+        }
+        else if (selectedButton.getIcon() == whiteRook) {
+            return new PieceRook(getX(selectedButton), getY(selectedButton), Color.white);
+        }
+        else if (selectedButton.getIcon() == whiteKnight) {
+            return new PieceKnight(getX(selectedButton), getY(selectedButton), Color.white);
+        }
+        else if (selectedButton.getIcon() == whiteBishop) {
+            return new PieceBishop(getX(selectedButton), getY(selectedButton), Color.white);
+        }
+        else if (selectedButton.getIcon() == whiteQueen) {
+            return new PieceQueen(getX(selectedButton), getY(selectedButton), Color.white);
+        }
+        else if (selectedButton.getIcon() == whiteKing) {
+            return new PieceKing(getX(selectedButton), getY(selectedButton), Color.white);
+        }
+        else {
+            return null;
+        }
     }
 
     public static void main(String[] args) {

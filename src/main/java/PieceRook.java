@@ -8,10 +8,10 @@ public class PieceRook extends Piece{
     //Rooks can move any number of squares horizontally or vertically
     @Override
     public boolean validMove(int rowFrom, int colFrom, int rowTo, int colTo) {
-        if (rowTo - rowFrom == 0 && Math.abs(colTo - colFrom) > 0) {
+        if (Math.abs(rowTo - rowFrom) == 0 && Math.abs(colTo - colFrom) > 0) {
             return true;
         }
-        else if (colTo - colFrom == 0 && Math.abs(rowTo - rowFrom) > 0) {
+        else if (Math.abs(colTo - colFrom) == 0 && Math.abs(rowTo - rowFrom) > 0) {
             return true;
         }
         else {

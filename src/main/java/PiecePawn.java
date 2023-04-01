@@ -9,7 +9,7 @@ public class PiecePawn extends Piece{
     //Pawn can move one square forward
     @Override
     public boolean validMove(int rowFrom, int colFrom, int rowTo, int colTo) {
-        if (colFrom - colTo == 0 && rowTo - rowFrom == 1) {
+        if (Math.abs(colFrom - colTo) == 0 && Math.abs(rowTo - rowFrom) == 1) {
             return true;
         }
         else {
