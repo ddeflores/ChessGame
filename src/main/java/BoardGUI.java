@@ -67,28 +67,63 @@ public class BoardGUI extends JFrame {
                             fromX = getX(selectedButton);
                             fromY = getY(selectedButton);
                             icon = selectedButton.getIcon();
+                            count++;
                         }
                         else {
                             JButton source = (JButton) e.getSource();
-                            Piece pieceToMove = getPiece(selectedButton);
-                            if (pieceToMove.getColor() == currentTurn) {
+                            if (selectedButton.getIcon() != null && getPiece(selectedButton).getColor() == currentTurn) {
+                                Piece pieceToMove = getPiece(selectedButton);
                                 toX = getX(source);
                                 toY = getY(source);
-                                if (pieceToMove instanceof PiecePawn) {
-                                    if (((PiecePawn) pieceToMove).validMove(fromX, fromY, toX, toY, ((PiecePawn) pieceToMove).getColor())) {
-                                        source.setIcon(icon);
-                                        selectedButton.setIcon(null);
-                                    }
-                                } else {
-                                    if (pieceToMove.validMove(fromX, fromY, toX, toY)) {
-                                        source.setIcon(icon);
-                                        selectedButton.setIcon(null);
+                                if (source.getIcon() != null) {
+                                    Piece pieceToTake = getPiece(source);
+                                    if (pieceToMove.getColor() != pieceToTake.getColor()) {
+                                        if (pieceToMove instanceof PiecePawn) {
+                                            if (pieceToMove.getColor() == Color.black && (toX - fromX == 1 && Math.abs(toY - fromY) == 1)) {
+                                                source.setIcon(icon);
+                                                selectedButton.setIcon(null);
+                                                currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                                count++;
+                                            } else if (pieceToMove.getColor() == Color.white && (fromX - toX == 1 && Math.abs(fromY - toY) == 1)) {
+                                                source.setIcon(icon);
+                                                selectedButton.setIcon(null);
+                                                currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                                count++;
+                                            }
+                                        }
+                                        else {
+                                            if (pieceToMove.validMove(fromX, fromY, toX, toY)) {
+                                                source.setIcon(icon);
+                                                selectedButton.setIcon(null);
+                                                currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                                count++;
+                                            }
+                                        }
                                     }
                                 }
-                                currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                else {
+                                    if (pieceToMove instanceof PiecePawn) {
+                                        if (((PiecePawn) pieceToMove).validMove(fromX, fromY, toX, toY, ((PiecePawn) pieceToMove).getColor())) {
+                                            source.setIcon(icon);
+                                            selectedButton.setIcon(null);
+                                            currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                            count++;
+                                        }
+                                    }
+                                    else {
+                                        if (pieceToMove.validMove(fromX, fromY, toX, toY)) {
+                                            source.setIcon(icon);
+                                            selectedButton.setIcon(null);
+                                            currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                            count++;
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                count--;
                             }
                         }
-                        count++;
                     }
 
                     @Override

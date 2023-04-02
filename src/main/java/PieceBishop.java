@@ -9,11 +9,6 @@ public class PieceBishop extends Piece {
     //Bishops can move any number of squares diagonally
     @Override
     public boolean validMove(int rowFrom, int colFrom, int rowTo, int colTo) {
-        if (Math.abs(rowTo - rowFrom) == Math.abs(colTo - colFrom)) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (Math.abs(rowTo - rowFrom) == Math.abs(colTo - colFrom));
     }
 }

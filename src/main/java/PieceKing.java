@@ -9,11 +9,6 @@ public class PieceKing extends Piece{
     //Kings can move one square in any direction
     @Override
     public boolean validMove(int rowFrom, int colFrom, int rowTo, int colTo) {
-        if (Math.abs(rowTo - rowFrom) <= 1 && Math.abs(colTo - colFrom) <= 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
+         return (Math.abs(rowTo - rowFrom) <= 1 && Math.abs(colTo - colFrom) <= 1);
     }
 }
