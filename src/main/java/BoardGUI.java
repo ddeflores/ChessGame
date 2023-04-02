@@ -7,18 +7,18 @@ public class BoardGUI extends JFrame {
     private JFrame frame;
     private JPanel panel;
     private JButton[][] buttons;
-    private ImageIcon blackPawn;
-    private ImageIcon blackRook;
-    private ImageIcon blackKnight;
-    private ImageIcon blackBishop;
-    private ImageIcon blackQueen;
-    private ImageIcon blackKing;
-    private ImageIcon whitePawn;
-    private ImageIcon whiteRook;
-    private ImageIcon whiteKnight;
-    private ImageIcon whiteBishop;
-    private ImageIcon whiteQueen;
-    private ImageIcon whiteKing;
+    private ImageIcon blackPawn = new ImageIcon("blackPawn.png");
+    private ImageIcon blackRook = new ImageIcon("blackRook.png");
+    private ImageIcon blackKnight = new ImageIcon("blackKnight.png");
+    private ImageIcon blackBishop = new ImageIcon("blackBishop.png");
+    private ImageIcon blackQueen = new ImageIcon("blackQueen.png");
+    private ImageIcon blackKing = new ImageIcon("blackKing.png");
+    private ImageIcon whitePawn = new ImageIcon("whitePawn.png");
+    private ImageIcon whiteRook = new ImageIcon("whiteRook.png");
+    private ImageIcon whiteKnight = new ImageIcon("whiteKnight.png");
+    private ImageIcon whiteBishop = new ImageIcon("whiteBishop.png");
+    private ImageIcon whiteQueen = new ImageIcon("whiteQueen.png");
+    private ImageIcon whiteKing = new ImageIcon("whiteKing.png");
     private JButton selectedButton;
     private Icon icon;
     private int count;
@@ -26,19 +26,6 @@ public class BoardGUI extends JFrame {
     private Color currentTurn = Color.white;
 
     public BoardGUI() {
-        blackPawn = new ImageIcon("blackPawn.png");
-        blackRook = new ImageIcon("blackRook.png");
-        blackKnight = new ImageIcon("blackKnight.png");
-        blackBishop = new ImageIcon("blackBishop.png");
-        blackQueen = new ImageIcon("blackQueen.png");
-        blackKing = new ImageIcon("blackKing.png");
-        whitePawn = new ImageIcon("whitePawn.png");
-        whiteRook = new ImageIcon("whiteRook.png");
-        whiteKnight = new ImageIcon("whiteKnight.png");
-        whiteBishop = new ImageIcon("whiteBishop.png");
-        whiteQueen = new ImageIcon("whiteQueen.png");
-        whiteKing = new ImageIcon("whiteKing.png");
-
         JFrame frame = new JFrame();
         frame.setSize(600, 600);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -59,7 +46,7 @@ public class BoardGUI extends JFrame {
                 else {
                     button.setBackground(new Color(111, 143, 175));
                 }
-                button.addMouseListener(new MouseListener() {
+                button.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (count % 2 == 0) {
@@ -90,32 +77,44 @@ public class BoardGUI extends JFrame {
                                                 currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
                                                 count++;
                                             }
+                                            else {
+                                                count--;
+                                            }
                                         }
                                         else {
-                                            if (pieceToMove.validMove(fromX, fromY, toX, toY)) {
+                                            if (pieceToMove.validMove(fromX, fromY, toX, toY, buttons)) {
                                                 source.setIcon(icon);
                                                 selectedButton.setIcon(null);
                                                 currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
                                                 count++;
+                                            }
+                                            else {
+                                                count--;
                                             }
                                         }
                                     }
                                 }
                                 else {
                                     if (pieceToMove instanceof PiecePawn) {
-                                        if (((PiecePawn) pieceToMove).validMove(fromX, fromY, toX, toY, ((PiecePawn) pieceToMove).getColor())) {
+                                        if (((PiecePawn) pieceToMove).validMove(fromX, fromY, toX, toY, buttons, ((PiecePawn) pieceToMove).getColor())) {
                                             source.setIcon(icon);
                                             selectedButton.setIcon(null);
                                             currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
                                             count++;
                                         }
+                                        else {
+                                            count--;
+                                        }
                                     }
                                     else {
-                                        if (pieceToMove.validMove(fromX, fromY, toX, toY)) {
+                                        if (pieceToMove.validMove(fromX, fromY, toX, toY, buttons)) {
                                             source.setIcon(icon);
                                             selectedButton.setIcon(null);
                                             currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
                                             count++;
+                                        }
+                                        else {
+                                            count--;
                                         }
                                     }
                                 }
@@ -124,22 +123,6 @@ public class BoardGUI extends JFrame {
                                 count--;
                             }
                         }
-                    }
-
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                    }
-
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
                     }
                 });
                 panel.add(button);

@@ -29,7 +29,7 @@ public class Piece extends JButton {
         this.col = col;
     }
 
-    public boolean validMove(int rowFrom, int colFrom, int rowTo, int colTo) {
+    public boolean validMove(int rowFrom, int colFrom, int rowTo, int colTo, JButton[][] board) {
         return false;
     }
 }

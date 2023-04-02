@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 
 public class PieceKnight extends Piece{
@@ -9,7 +10,7 @@ public class PieceKnight extends Piece{
 
     //Knights can move in any direction in an L-Shape
     @Override
-    public boolean validMove(int rowFrom, int colFrom, int rowTo, int colTo) {
+    public boolean validMove(int rowFrom, int colFrom, int rowTo, int colTo, JButton[][] board) {
         if (Math.abs(rowTo - rowFrom) == 1 && Math.abs(colTo - colFrom) == 2) {
             return true;
         }
