@@ -1,17 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Piece extends JButton {
+public class Piece {
     private int row;
     private int col;
     private Color color;
 
+    // Default constructor
     public Piece(int row, int col, Color color) {
         this.row = row;
         this.col = col;
         this.color = color;
     }
 
+    // Getters
     public int getRow() {
         return row;
     }
@@ -22,13 +24,7 @@ public class Piece extends JButton {
         return color;
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
-    public void setCol(int col) {
-        this.col = col;
-    }
-
+    // Each piece has its own valid move method
     public boolean validMove(int rowFrom, int colFrom, int rowTo, int colTo, JButton[][] board) {
         return false;
     }
