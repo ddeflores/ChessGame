@@ -27,6 +27,9 @@ public class BoardGUI extends JFrame {
     private int toX;
     private int toY;
     private Color currentTurn = Color.white;
+    private boolean whiteKingMoved, blackKingMoved = false;
+    private boolean kingsideWhiteRookMoved, kingsideBlackRookMoved = false;
+    private boolean queensideWhiteRookMoved, queensideBlackRookMoved= false;
 
     //Initialize the board and its GUI
     public BoardGUI() {
@@ -74,6 +77,8 @@ public class BoardGUI extends JFrame {
                             if (source.getIcon() != null) {
                                 Piece pieceToTake = getPiece(source);
                                 if (pieceToMove.getColor() != pieceToTake.getColor()) { // Make sure the piece on the square is on the other team
+
+                                    // A pawns validMove method takes different parameters
                                     if (pieceToMove instanceof PiecePawn) {
                                         if (((PiecePawn)pieceToMove).validMove(fromX,fromY,toX,toY,buttons,pieceToMove.getColor())) {
                                             source.setIcon(icon);
@@ -87,24 +92,93 @@ public class BoardGUI extends JFrame {
                                             currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
                                         }
                                     }
+                                    count--;
                                 }
-                            } else { // There is no piece on the square being moved to. Check if the move is valid, and move
+                            } else { // There is no piece on the square being moved to. If the move is valid, then move the piece
+
+                                // A pawns validMove method takes different parameters
                                 if (pieceToMove instanceof PiecePawn) {
                                     if (((PiecePawn) pieceToMove).validMove(fromX, fromY, toX, toY, buttons, ((PiecePawn) pieceToMove).getColor())) {
                                         source.setIcon(icon);
                                         selectedButton.setIcon(null);
                                         currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
                                     }
+                                // Kings have the ability to castle left or right, if both the king and the target rook have not moved
+                                } else if (pieceToMove instanceof PieceKing){
+                                    // If the king is making a regular move, switch its moved status to true
+                                    if (pieceToMove.validMove(fromX, fromY, toX, toY, buttons)) {
+                                        source.setIcon(icon);
+                                        selectedButton.setIcon(null);
+                                        if (currentTurn == Color.white){
+                                            whiteKingMoved = true;
+                                        } else {
+                                            blackKingMoved = true;
+                                        }
+                                        currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                    // If castling to the kingside, make sure the king and the kingside rook have not moved
+                                    } else if (toY - fromY == 2 && toX == fromX && buttons[toX][toY].getIcon() == null && fromY == 4) {
+                                        if (((PieceKing) pieceToMove).checkCastlePath(fromX, toY, buttons)) {
+                                            if (pieceToMove.getColor() == Color.black && !blackKingMoved && !kingsideBlackRookMoved) {
+                                                buttons[fromX][6].setIcon(blackKing);
+                                                buttons[fromX][5].setIcon(blackRook);
+                                                buttons[fromX][fromY].setIcon(null);
+                                                buttons[toX][7].setIcon(null);
+                                                currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                            } else {
+                                                if (!whiteKingMoved && !kingsideWhiteRookMoved) {
+                                                    buttons[fromX][6].setIcon(whiteKing);
+                                                    buttons[fromX][5].setIcon(whiteRook);
+                                                    buttons[fromX][fromY].setIcon(null);
+                                                    buttons[toX][7].setIcon(null);
+                                                    currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                                }
+                                            }
+                                        }
+                                    // If castling to the queenside, make sure the king and the queenside rook have not moved
+                                    } else if (fromY - toY == 2 && toX == fromX && buttons[toX][toY].getIcon() == null && fromY == 4) {
+                                        if (((PieceKing) pieceToMove).checkCastlePath(fromX, toY, buttons)) {
+                                            if (pieceToMove.getColor() == Color.black && !blackKingMoved && !queensideBlackRookMoved) {
+                                                buttons[fromX][2].setIcon(blackKing);
+                                                buttons[fromX][3].setIcon(blackRook);
+                                                buttons[fromX][fromY].setIcon(null);
+                                                buttons[toX][0].setIcon(null);
+                                                currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                            } else {
+                                                if (!whiteKingMoved && !queensideWhiteRookMoved) {
+                                                    buttons[fromX][2].setIcon(whiteKing);
+                                                    buttons[fromX][3].setIcon(whiteRook);
+                                                    buttons[fromX][fromY].setIcon(null);
+                                                    buttons[toX][0].setIcon(null);
+                                                    currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
+                                                }
+                                            }
+                                        }
+                                    }
+                                // If the piece is not a king or pawn
                                 } else {
                                     if (pieceToMove.validMove(fromX, fromY, toX, toY, buttons)) {
+                                        if (pieceToMove instanceof PieceRook) {
+                                            if (pieceToMove.getColor() == Color.black) {
+                                                if (pieceToMove.getCol() == 7) {
+                                                    kingsideBlackRookMoved = true;
+                                                } else {
+                                                    queensideBlackRookMoved = true;
+                                                }
+                                            } else {
+                                                if (pieceToMove.getCol() == 7) {
+                                                    kingsideWhiteRookMoved = true;
+                                                } else {
+                                                    queensideWhiteRookMoved = true;
+                                                }
+                                            }
+                                        }
                                         source.setIcon(icon);
                                         selectedButton.setIcon(null);
                                         currentTurn = (currentTurn == Color.white) ? Color.black : Color.white;
                                     }
                                 }
+                                count--;
                             }
-                            // Decrement the click count
-                            count--;
                         }
                     }
                 });
